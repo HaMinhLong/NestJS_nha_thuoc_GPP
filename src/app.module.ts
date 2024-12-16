@@ -2,7 +2,7 @@ import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule } from '@nestjs/config';
 
-import { UserModule } from './user/user.module';
+import { UserModule } from './modules/user/user.module';
 import configuration from './config/configuration';
 import { databaseConfig } from './database.config';
 
@@ -12,7 +12,15 @@ import { databaseConfig } from './database.config';
       load: [configuration],
       isGlobal: true,
     }),
-    TypeOrmModule.forRoot(databaseConfig),
+    TypeOrmModule.forRootAsync({
+      useFactory: async () => {
+        // Khởi tạo DataSource
+        const dataSource = await databaseConfig.initialize();
+        return {
+          ...dataSource.options,
+        };
+      },
+    }),
     UserModule,
   ],
 })

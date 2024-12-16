@@ -25,6 +25,31 @@ async function bootstrap() {
     credentials: true,
   });
 
+  // const configService = app.get<ConfigService>(ConfigService);
+  // const swaggerConfig = configService.get<SwaggerConfig>('swagger');
+
+  // Swagger Api
+  // if (configService.get<string>('ENABLE_SWAGGER') === 'true') {
+  //   const options = new DocumentBuilder()
+  //     .setTitle(swaggerConfig.title || 'Nestjs')
+  //     .setDescription(swaggerConfig.description || 'The nestjs API description')
+  //     .setVersion(swaggerConfig.version || '1.0')
+  //     .addBearerAuth()
+  //     .build();
+  //   const document = SwaggerModule.createDocument(app, options);
+  //   const customOptions: SwaggerCustomOptions = {
+  //     swaggerOptions: {
+  //       persistAuthorization: true,
+  //     },
+  //   };
+  //   SwaggerModule.setup(
+  //     swaggerConfig.path || 'api',
+  //     app,
+  //     document,
+  //     customOptions,
+  //   );
+  // }
+
   const PORT = process.env.PORT;
   await app.listen(PORT || 8080);
 }
