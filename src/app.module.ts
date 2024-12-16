@@ -2,9 +2,10 @@ import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule } from '@nestjs/config';
 
-import { UserModule } from './modules/user/user.module';
 import configuration from './config/configuration';
 import { databaseConfig } from './database.config';
+import { UserModule } from './modules/user/user.module';
+import { UserGroupModule } from './modules/user-group/user-group.module';
 
 @Module({
   imports: [
@@ -22,6 +23,7 @@ import { databaseConfig } from './database.config';
       },
     }),
     UserModule,
+    UserGroupModule,
   ],
 })
 export class AppModule {}

@@ -4,7 +4,10 @@ import {
   PrimaryGeneratedColumn,
   CreateDateColumn,
   UpdateDateColumn,
+  JoinColumn,
+  ManyToOne,
 } from 'typeorm';
+import { UserGroup } from './../../user-group/entities/user-group.entity';
 
 @Entity()
 export class User {
@@ -31,4 +34,12 @@ export class User {
 
   @UpdateDateColumn({ type: 'timestamp' })
   updatedAt: Date;
+
+  @Column({ nullable: false })
+  user_group_id: number;
+
+  // Mối quan hệ ManyToOne: Mỗi người dùng chỉ có thể thuộc một loại tài khoản
+  @ManyToOne(() => UserGroup, (userGroup) => userGroup.users)
+  @JoinColumn({ name: 'user_group_id' }) // Cột ngoại khóa
+  userGroup: UserGroup;
 }
