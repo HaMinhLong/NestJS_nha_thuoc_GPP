@@ -1,13 +1,22 @@
+import { TypeOrmModule } from '@nestjs/typeorm';
 import { Module } from '@nestjs/common';
-import { UserService } from './user.service';
+import { JwtModule } from '@nestjs/jwt';
+import { JwtStrategy } from 'src/common/guard/jwt.strategy';
+
 import { UserController } from './user.controller';
 import { User } from './entities/user.entity';
-import { TypeOrmModule } from '@nestjs/typeorm';
+import { UserService } from './user.service';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([User])],
+  imports: [
+    TypeOrmModule.forFeature([User]),
+    JwtModule.register({
+      secret: process.env.JWT_SECRET,
+      signOptions: { expiresIn: '1h' },
+    }),
+  ],
   controllers: [UserController],
-  providers: [UserService],
+  providers: [UserService, JwtStrategy],
   exports: [UserService],
 })
 export class UserModule {}
