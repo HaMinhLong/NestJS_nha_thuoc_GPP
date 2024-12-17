@@ -2,7 +2,7 @@
 import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from 'typeorm';
 import { User } from '../../user/entities/user.entity'; // Import User entity
 
-@Entity('userGroups') // Đặt tên bảng là 'userGroups'
+@Entity()
 export class UserGroup {
   @PrimaryGeneratedColumn()
   id: number;
