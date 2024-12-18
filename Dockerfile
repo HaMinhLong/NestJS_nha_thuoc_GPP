@@ -1,16 +1,31 @@
-# Sử dụng image Node.js để xây dựng project NestJS
-FROM node:14
+# Sử dụng image Node.js 18 (bản ổn định mới nhất)
+FROM node:18
 
-# Cài đặt các phụ thuộc cần thiết
+# Đặt working directory là /app
 WORKDIR /app
-COPY package*.json ./
-RUN npm install
 
-# Sao chép mã nguồn của project vào container
+# Sao chép file package.json và package-lock.json vào working directory
+COPY package*.json ./
+
+# Cài đặt các dependencies
+RUN npm install
+RUN npm rebuild bcrypt --build-from-source
+
+# Sao chép source code vào working directory
 COPY . .
 
-# Chạy script build của NestJS
+# Chạy script build để biên dịch TypeORM entities
 RUN npm run build
 
-# Chạy ứng dụng NestJS
-CMD [ "npm", "run", "start:dev" ]
+# Kiểm tra thư mục dist được tạo
+RUN ls -la dist
+
+# Copy wait-for-it.sh vào Docker image
+COPY wait-for-it.sh /usr/local/bin/wait-for-it
+RUN chmod +x /usr/local/bin/wait-for-it
+
+# Lệnh khởi chạy ứng dụng và chờ MySQL sẵn sàng
+CMD ["sh", "-c", "wait-for-it mysql:3306 -- npm run migration:run && npm run start:nodemon"]
+
+# Expose port 3000 (mặc định của NestJS)
+EXPOSE 3000

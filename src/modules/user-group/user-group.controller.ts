@@ -7,11 +7,16 @@ import {
   Param,
   Put,
   Delete,
+  UseGuards,
 } from '@nestjs/common';
 import { UserGroupService } from './user-group.service';
 import { UserGroup } from './entities/user-group.entity';
+import { JwtAuthGuard } from 'src/common/guard/jwt-auth.guard';
+import { ApiBearerAuth } from '@nestjs/swagger';
 
-@Controller('user-groups')
+@Controller('user-group')
+@UseGuards(JwtAuthGuard)
+@ApiBearerAuth()
 export class UserGroupController {
   constructor(private readonly userGroupService: UserGroupService) {}
 

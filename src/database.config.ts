@@ -5,22 +5,22 @@ import * as dotenv from 'dotenv';
 dotenv.config();
 
 const env = {
-  MYSQL_HOST: process.env.MYSQL_HOST,
-  DATABASE_PORT: process.env.DATABASE_PORT,
-  MYSQL_USERNAME: process.env.MYSQL_USERNAME,
-  MYSQL_PASSWORD: process.env.MYSQL_PASSWORD,
-  MYSQL_DATABASE_NAME: process.env.MYSQL_DATABASE_NAME,
+  DB_HOST: process.env.DB_HOST,
+  DB_PORT: process.env.DB_PORT,
+  DB_USER: process.env.DB_USER,
+  DB_PASSWORD: process.env.DB_PASSWORD,
+  DB_NAME: process.env.DB_NAME,
 };
 
 export const databaseConfig = new DataSource({
   type: 'mysql',
-  host: env.MYSQL_HOST || 'localhost',
-  port: parseInt(env.DATABASE_PORT || '3306'),
-  username: env.MYSQL_USERNAME,
-  password: env.MYSQL_PASSWORD,
-  database: env.MYSQL_DATABASE_NAME,
-  synchronize: false,
+  host: env.DB_HOST || 'mysql',
+  port: parseInt(env.DB_PORT || '3306'),
+  username: env.DB_USER,
+  password: env.DB_PASSWORD,
+  database: env.DB_NAME,
+  synchronize: true,
   logging: true,
   entities: [join(__dirname, '**', '**', '*.entity.{ts,js}')],
-  migrations: [join(__dirname, 'prisma', 'migrations', '*.{ts,js}')],
+  migrations: [join(__dirname, 'prisma/migrations/*.{ts,js}')],
 });

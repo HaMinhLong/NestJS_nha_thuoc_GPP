@@ -30,6 +30,9 @@ export class User {
   @Column({ unique: true })
   email: string;
 
+  @Column({ nullable: true })
+  phone: string;
+
   @Column({ type: 'int', default: 1 })
   status: number;
 
