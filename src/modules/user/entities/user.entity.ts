@@ -13,7 +13,7 @@ import { UserGroup } from './../../user-group/entities/user-group.entity';
 @Entity()
 @Index('idx_user_username', ['username'], { unique: true }) // Index cho cột username (unique)
 @Index('idx_user_email', ['email'], { unique: true }) // Index cho cột email (unique)
-@Index('idx_user_group_id', ['userGroup'])
+@Index('idx_user_group_id', ['userGroupId'])
 export class User {
   @PrimaryGeneratedColumn()
   id: number;
@@ -43,10 +43,10 @@ export class User {
   updatedAt: Date;
 
   @Column({ nullable: false })
-  user_group_id: number;
+  userGroupId: number;
 
   // Mối quan hệ ManyToOne: Mỗi người dùng chỉ có thể thuộc một loại tài khoản
   @ManyToOne(() => UserGroup, (userGroup) => userGroup.users)
-  @JoinColumn({ name: 'user_group_id' }) // Cột ngoại khóa
+  @JoinColumn({ name: 'userGroupId' }) // Cột ngoại khóa
   userGroup: UserGroup;
 }

@@ -43,9 +43,10 @@ export class UserGroupService {
 
   // Cập nhật nhóm người dùng
   async update(id: number, name: string): Promise<UserGroup> {
-    const user = await this.findOne(id);
-    Object.assign(user, name);
-    return this.userGroupRepository.save(user);
+    const userGroup = await this.findOne(id);
+    Object.assign(userGroup, { name });
+
+    return this.userGroupRepository.save(userGroup);
   }
 
   // Xóa nhóm người dùng

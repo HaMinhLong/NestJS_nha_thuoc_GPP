@@ -1,5 +1,4 @@
-import { IsEmail, IsInt, IsOptional, IsString, Min } from 'class-validator';
-import { IsNull } from 'typeorm';
+import { IsEmail, IsInt, IsString, Min } from 'class-validator';
 
 export class CreateUserDto {
   @IsString()
