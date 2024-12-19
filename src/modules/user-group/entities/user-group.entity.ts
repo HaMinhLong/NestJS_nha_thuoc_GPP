@@ -1,6 +1,14 @@
 // src/entities/user-group.entity.ts
-import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from 'typeorm';
-import { User } from '../../user/entities/user.entity'; // Import User entity
+import {
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  OneToMany,
+  ManyToMany,
+  JoinTable,
+} from 'typeorm';
+import { User } from 'src/modules/user/entities/user.entity'; // Import User entity
+import { Permission } from 'src/modules/permission/entities/permission.entity';
 
 @Entity()
 export class UserGroup {
@@ -9,6 +17,10 @@ export class UserGroup {
 
   @Column()
   name: string;
+
+  @ManyToMany(() => Permission, (permission) => permission.groups)
+  @JoinTable({ name: 'user_group_permissions' })
+  permissions: Permission[];
 
   // Mối quan hệ OneToMany: Một nhóm người dùng có thể có nhiều user
   @OneToMany(() => User, (user) => user.userGroup)
