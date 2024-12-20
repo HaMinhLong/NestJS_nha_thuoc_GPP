@@ -11,8 +11,8 @@ import {
 import { UserGroup } from './../../user-group/entities/user-group.entity';
 
 @Entity()
-@Index('idx_user_username', ['username'], { unique: true }) // Index cho cột username (unique)
-@Index('idx_user_email', ['email'], { unique: true }) // Index cho cột email (unique)
+@Index('idx_user_username', ['username'], { unique: true })
+@Index('idx_user_email', ['email'], { unique: true })
 @Index('idx_user_group_id', ['userGroupId'])
 export class User {
   @PrimaryGeneratedColumn()

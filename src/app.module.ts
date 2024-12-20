@@ -1,14 +1,17 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule } from '@nestjs/config';
+import { APP_INTERCEPTOR } from '@nestjs/core';
 
 import configuration from './config/configuration';
 import { databaseConfig } from './database.config';
+import { ResponseInterceptor } from './interceptors/response.interceptor';
+
+import { AuthModule } from './modules/auth/auth.module';
 import { UserModule } from './modules/user/user.module';
 import { UserGroupModule } from './modules/user-group/user-group.module';
-import { AuthModule } from './modules/auth/auth.module';
-import { APP_INTERCEPTOR } from '@nestjs/core';
-import { ResponseInterceptor } from './interceptors/response.interceptor';
+import { PermissionModule } from './modules/permission/permission.module';
+import { UserGroupPermissionModule } from './modules/user-group-permission/user-group-permission.module';
 
 @Module({
   imports: [
@@ -28,6 +31,8 @@ import { ResponseInterceptor } from './interceptors/response.interceptor';
     UserModule,
     UserGroupModule,
     AuthModule,
+    PermissionModule,
+    UserGroupPermissionModule,
   ],
   providers: [
     {

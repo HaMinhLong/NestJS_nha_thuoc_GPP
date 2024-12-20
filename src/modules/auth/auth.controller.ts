@@ -1,4 +1,12 @@
-import { Controller, Post, Body, UseGuards, Get, Req } from '@nestjs/common';
+import {
+  Controller,
+  Post,
+  Body,
+  UseGuards,
+  Get,
+  Req,
+  SetMetadata,
+} from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { User } from '../user/entities/user.entity';
 import { JwtAuthGuard } from 'src/common/guard/jwt-auth.guard';
@@ -9,16 +17,19 @@ export class AuthController {
 
   // API Login
   @Post('login')
+  @SetMetadata('customMessage', 'Login successfully')
   async login(
     @Body('username') username: string, // Dùng username hoặc email
     @Body('password') password: string,
-  ): Promise<{ accessToken: string }> {
+  ): Promise<{ accessToken: string; permission: string[] }> {
     return this.authService.login(username, password);
   }
 
   // API Register (nếu cần)
   @Post('register')
+  @SetMetadata('customMessage', 'Register successfully')
   async register(
+    @Body('name') name: string,
     @Body('username') username: string,
     @Body('email') email: string,
     @Body('password') password: string,

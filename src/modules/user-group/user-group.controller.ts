@@ -1,4 +1,3 @@
-// src/user-group.controller.ts
 import {
   Controller,
   Get,

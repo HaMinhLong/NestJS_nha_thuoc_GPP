@@ -16,6 +16,8 @@ import { UpdateUserDto } from './dto/update-user.dto';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UserService } from './user.service';
 import { User } from './entities/user.entity';
+import { PermissionsGuard } from 'src/guard/permissions.guard';
+import { Permissions } from 'src/decorators/permissions.decorator';
 
 @ApiTags('users')
 @Controller('user')
@@ -31,12 +33,16 @@ export class UserController {
   }
 
   @Get()
+  @UseGuards(PermissionsGuard)
+  @Permissions('user_getList')
   @SetMetadata('customMessage', 'User list retrieved successfully')
   async findAll(): Promise<User[]> {
     return this.userService.findAll();
   }
 
   @Get(':id')
+  @UseGuards(PermissionsGuard) // Áp dụng PermissionsGuard cho API này
+  @Permissions('user_getDetail')
   @SetMetadata('customMessage', 'User details retrieved successfully')
   findOne(@Param('id') id: string) {
     return this.userService.findOne(+id);

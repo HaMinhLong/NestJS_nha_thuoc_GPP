@@ -8,7 +8,7 @@ import {
   JoinTable,
 } from 'typeorm';
 import { User } from 'src/modules/user/entities/user.entity'; // Import User entity
-import { Permission } from 'src/modules/permission/entities/permission.entity';
+import { UserGroupPermission } from 'src/modules/user-group-permission/entities/user-group-permission.entity';
 
 @Entity()
 export class UserGroup {
@@ -18,11 +18,14 @@ export class UserGroup {
   @Column()
   name: string;
 
-  @ManyToMany(() => Permission, (permission) => permission.groups)
-  @JoinTable({ name: 'user_group_permissions' })
-  permissions: Permission[];
-
   // Mối quan hệ OneToMany: Một nhóm người dùng có thể có nhiều user
   @OneToMany(() => User, (user) => user.userGroup)
   users: User[];
+
+  // Mối quan hệ OneToMany với UserGroupPermission
+  @OneToMany(
+    () => UserGroupPermission,
+    (userGroupPermission) => userGroupPermission.userGroup,
+  )
+  userGroupPermissions: UserGroupPermission[];
 }
