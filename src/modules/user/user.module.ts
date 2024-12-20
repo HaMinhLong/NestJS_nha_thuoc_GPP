@@ -25,6 +25,6 @@ import { UserGroupPermission } from '../user-group-permission/entities/user-grou
     PermissionsGuard,
     UserGroupPermissionService,
   ],
-  exports: [UserService, PermissionsGuard],
+  exports: [UserService],
 })
 export class UserModule {}

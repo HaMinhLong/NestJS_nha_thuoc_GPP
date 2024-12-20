@@ -10,15 +10,15 @@ import {
   SetMetadata,
 } from '@nestjs/common';
 import { ApiBearerAuth } from '@nestjs/swagger';
-import { Response } from 'express';
 
 import { JwtAuthGuard } from 'src/common/guard/jwt-auth.guard';
-import { responseWrapper } from 'src/helper/response.helper';
+import { Permissions } from 'src/decorators/permissions.decorator';
 
 import { PermissionService } from './permission.service';
 import { Permission } from './entities/permission.entity';
 import { CreatePermissionDto } from './dto/create-permission.dto';
 import { UpdatePermissionDto } from './dto/update-permission.dto';
+import { PermissionsGuard } from 'src/guard/permissions.guard';
 
 @Controller('permission')
 @UseGuards(JwtAuthGuard)
@@ -28,6 +28,8 @@ export class PermissionController {
 
   // Tạo mới quyền
   @Post()
+  @UseGuards(PermissionsGuard)
+  @Permissions('permission_create')
   @SetMetadata('customMessage', 'Permission created successfully')
   async create(@Body() body: CreatePermissionDto): Promise<Permission> {
     return this.permissionService.create(body.name);
@@ -35,6 +37,8 @@ export class PermissionController {
 
   // Lấy tất cả quyền
   @Get()
+  @UseGuards(PermissionsGuard)
+  @Permissions('permission_getList')
   @SetMetadata('customMessage', 'Permissions list retrieved successfully')
   async findAll(): Promise<Permission[]> {
     return this.permissionService.findAll();
@@ -42,6 +46,8 @@ export class PermissionController {
 
   // Lấy quyền theo id
   @Get(':id')
+  @UseGuards(PermissionsGuard)
+  @Permissions('permission_getDetail')
   @SetMetadata('customMessage', 'Permission details retrieved successfully')
   async findOne(@Param('id') id: number): Promise<Permission> {
     return this.permissionService.findOne(id);
@@ -49,6 +55,8 @@ export class PermissionController {
 
   // Cập nhật quyền
   @Put(':id')
+  @UseGuards(PermissionsGuard)
+  @Permissions('permission_update')
   @SetMetadata('customMessage', 'Permission updated successfully')
   async update(
     @Param('id') id: number,
@@ -59,6 +67,8 @@ export class PermissionController {
 
   // Xóa quyền
   @Delete(':id')
+  @UseGuards(PermissionsGuard)
+  @Permissions('permission_remove')
   @SetMetadata('customMessage', 'Permission deleted successfully')
   async remove(@Param('id') id: number): Promise<void> {
     return this.permissionService.remove(id);

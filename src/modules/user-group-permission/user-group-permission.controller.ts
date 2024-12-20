@@ -1,5 +1,15 @@
-import { Body, Controller, Get, Param, Put } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Param,
+  Put,
+  SetMetadata,
+  UseGuards,
+} from '@nestjs/common';
 import { UserGroupPermissionService } from './user-group-permission.service';
+import { PermissionsGuard } from 'src/guard/permissions.guard';
+import { Permissions } from 'src/decorators/permissions.decorator';
 
 @Controller('user-group-permissions')
 export class UserGroupPermissionController {
@@ -8,6 +18,12 @@ export class UserGroupPermissionController {
   ) {}
 
   @Get('user-group/:id')
+  @UseGuards(PermissionsGuard)
+  @Permissions('permission_getList')
+  @SetMetadata(
+    'customMessage',
+    'User group permissions list retrieved successfully',
+  )
   async getPermissionsByUserGroup(@Param('id') id: string) {
     const userGroupId = parseInt(id, 10);
     if (isNaN(userGroupId)) {
@@ -20,6 +36,9 @@ export class UserGroupPermissionController {
   }
 
   @Put()
+  @UseGuards(PermissionsGuard)
+  @Permissions('permission_update')
+  @SetMetadata('customMessage', 'User group permissions updated successfully')
   async updatePermissions(
     @Body()
     permissions: {

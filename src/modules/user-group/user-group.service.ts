@@ -85,7 +85,7 @@ export class UserGroupService {
     });
 
     if (!userGroup) {
-      throw new Error('user group not found');
+      throw new NotFoundException('User group not found');
     }
 
     await this.userGroupPermissionRepository.delete({ userGroup: userGroup });

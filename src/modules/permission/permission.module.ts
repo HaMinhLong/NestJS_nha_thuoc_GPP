@@ -8,6 +8,8 @@ import { Permission } from './entities/permission.entity';
 import { PermissionService } from './permission.service';
 import { UserGroup } from '../user-group/entities/user-group.entity';
 import { UserGroupPermission } from '../user-group-permission/entities/user-group-permission.entity';
+import { PermissionsGuard } from 'src/guard/permissions.guard';
+import { UserGroupPermissionService } from '../user-group-permission/user-group-permission.service';
 
 @Module({
   imports: [
@@ -18,7 +20,12 @@ import { UserGroupPermission } from '../user-group-permission/entities/user-grou
     }),
   ],
   controllers: [PermissionController],
-  providers: [PermissionService, JwtStrategy],
+  providers: [
+    PermissionService,
+    JwtStrategy,
+    PermissionsGuard,
+    UserGroupPermissionService,
+  ],
   exports: [PermissionService],
 })
 export class PermissionModule {}
