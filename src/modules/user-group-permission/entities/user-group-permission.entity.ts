@@ -1,4 +1,10 @@
-import { Entity, PrimaryGeneratedColumn, ManyToOne, Column } from 'typeorm';
+import {
+  Entity,
+  PrimaryGeneratedColumn,
+  ManyToOne,
+  Column,
+  JoinColumn,
+} from 'typeorm';
 
 import { Permission } from 'src/modules/permission/entities/permission.entity';
 import { UserGroup } from 'src/modules/user-group/entities/user-group.entity';
@@ -8,11 +14,13 @@ export class UserGroupPermission {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @ManyToOne(() => UserGroup, (userGroup) => userGroup.id)
-  userGroupId: number;
+  @ManyToOne(() => UserGroup, (userGroup) => userGroup.userGroupPermissions)
+  @JoinColumn({ name: 'userGroupId' })
+  userGroup: UserGroup;
 
-  @ManyToOne(() => Permission, (permission) => permission.id)
-  permissionId: number;
+  @ManyToOne(() => Permission, (permission) => permission.userGroupPermissions)
+  @JoinColumn({ name: 'permissionId' })
+  permission: Permission;
 
   @Column({ default: false })
   getList: boolean;

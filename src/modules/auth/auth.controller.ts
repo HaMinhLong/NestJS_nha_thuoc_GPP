@@ -21,7 +21,7 @@ export class AuthController {
   async login(
     @Body('username') username: string, // Dùng username hoặc email
     @Body('password') password: string,
-  ): Promise<{ accessToken: string }> {
+  ): Promise<{ accessToken: string; permission: string[] }> {
     return this.authService.login(username, password);
   }
 
@@ -29,6 +29,7 @@ export class AuthController {
   @Post('register')
   @SetMetadata('customMessage', 'Register successfully')
   async register(
+    @Body('name') name: string,
     @Body('username') username: string,
     @Body('email') email: string,
     @Body('password') password: string,

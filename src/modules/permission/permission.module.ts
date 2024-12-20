@@ -6,10 +6,12 @@ import { JwtStrategy } from 'src/common/guard/jwt.strategy';
 import { PermissionController } from './permission.controller';
 import { Permission } from './entities/permission.entity';
 import { PermissionService } from './permission.service';
+import { UserGroup } from '../user-group/entities/user-group.entity';
+import { UserGroupPermission } from '../user-group-permission/entities/user-group-permission.entity';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([Permission]),
+    TypeOrmModule.forFeature([Permission, UserGroup, UserGroupPermission]),
     JwtModule.register({
       secret: process.env.JWT_SECRET,
       signOptions: { expiresIn: '1h' },

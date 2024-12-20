@@ -11,6 +11,7 @@ import { AuthModule } from './modules/auth/auth.module';
 import { UserModule } from './modules/user/user.module';
 import { UserGroupModule } from './modules/user-group/user-group.module';
 import { PermissionModule } from './modules/permission/permission.module';
+import { UserGroupPermissionModule } from './modules/user-group-permission/user-group-permission.module';
 
 @Module({
   imports: [
@@ -31,6 +32,7 @@ import { PermissionModule } from './modules/permission/permission.module';
     UserGroupModule,
     AuthModule,
     PermissionModule,
+    UserGroupPermissionModule,
   ],
   providers: [
     {
