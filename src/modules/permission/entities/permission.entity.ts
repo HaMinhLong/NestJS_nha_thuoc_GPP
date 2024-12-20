@@ -8,10 +8,4 @@ export class Permission {
 
   @Column()
   name: string;
-
-  @Column()
-  category: string;
-
-  @ManyToMany(() => UserGroup, (group) => group.permissions)
-  groups: UserGroup[];
 }

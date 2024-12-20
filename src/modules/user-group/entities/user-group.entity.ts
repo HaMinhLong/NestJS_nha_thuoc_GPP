@@ -18,10 +18,6 @@ export class UserGroup {
   @Column()
   name: string;
 
-  @ManyToMany(() => Permission, (permission) => permission.groups)
-  @JoinTable({ name: 'user_group_permissions' })
-  permissions: Permission[];
-
   // Mối quan hệ OneToMany: Một nhóm người dùng có thể có nhiều user
   @OneToMany(() => User, (user) => user.userGroup)
   users: User[];
