@@ -6,6 +6,7 @@ import { JwtStrategy } from 'src/common/guard/jwt.strategy';
 import { UserGroupPermissionController } from './user-group-permission.controller';
 import { UserGroupPermission } from './entities/user-group-permission.entity';
 import { UserGroupPermissionService } from './user-group-permission.service';
+import { PermissionsGuard } from 'src/guard/permissions.guard';
 
 @Module({
   imports: [
@@ -16,7 +17,7 @@ import { UserGroupPermissionService } from './user-group-permission.service';
     }),
   ],
   controllers: [UserGroupPermissionController],
-  providers: [UserGroupPermissionService, JwtStrategy],
+  providers: [UserGroupPermissionService, JwtStrategy, PermissionsGuard],
   exports: [UserGroupPermissionService],
 })
 export class UserGroupPermissionModule {}

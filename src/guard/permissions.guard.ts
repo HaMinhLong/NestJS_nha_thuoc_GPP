@@ -1,4 +1,9 @@
-import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
+import {
+  CanActivate,
+  ExecutionContext,
+  ForbiddenException,
+  Injectable,
+} from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { JwtService } from '@nestjs/jwt';
 import { Observable } from 'rxjs';
@@ -26,12 +31,14 @@ export class PermissionsGuard implements CanActivate {
     }
 
     // Lấy thông tin người dùng từ request
-    const { user, headers } = context.switchToHttp().getRequest();
+    const { headers } = context.switchToHttp().getRequest();
 
     const authHeader = headers.authorization;
 
     if (!authHeader) {
-      return false;
+      throw new ForbiddenException(
+        'You do not have permission to access this resource',
+      );
     }
 
     const token = authHeader.split(' ')[1];
@@ -42,10 +49,6 @@ export class PermissionsGuard implements CanActivate {
         userGroupId,
       );
     const permissions = transformPermissions(userGroupPermissions);
-
-    if (!user) {
-      return false; // Nếu không có thông tin người dùng hoặc không có quyền, từ chối truy cập
-    }
 
     // Kiểm tra xem quyền của người dùng có bao gồm quyền yêu cầu không
     return permissions.includes(requiredPermission);
