@@ -1,10 +1,15 @@
 // src/user-group.service.ts
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  ConflictException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Like, Repository } from 'typeorm';
 import { UserGroup } from './entities/user-group.entity';
 import { UserGroupPermission } from '../user-group-permission/entities/user-group-permission.entity';
 import { Permission } from '../permission/entities/permission.entity';
+import { PaginationType } from 'src/types/global';
 
 @Injectable()
 export class UserGroupService {
@@ -21,6 +26,16 @@ export class UserGroupService {
 
   // Tạo mới nhóm người dùng
   async create(name: string): Promise<UserGroup> {
+    // 1. Kiểm tra xem user group đã tồn tại hay chưa
+    const existingUserGroup = await this.userGroupRepository.findOneBy({
+      name,
+    });
+
+    if (existingUserGroup) {
+      // Nếu đã tồn tại, throw một lỗi
+      throw new ConflictException('User group đã tồn tại.');
+    }
+
     // 1. Tạo user group mới
     const newUserGroup = this.userGroupRepository.create({ name });
     const savedUserGroup = await this.userGroupRepository.save(newUserGroup);
@@ -47,16 +62,46 @@ export class UserGroupService {
   }
 
   // Lấy tất cả nhóm người dùng
-  async findAll(): Promise<UserGroup[]> {
-    return this.userGroupRepository.find({
-      relations: ['users'],
-      select: {
-        users: {
-          id: true,
-          name: true,
-        },
-      },
+  async findAll(
+    page = 1,
+    limit = 10,
+    keyword?: string,
+    selectFields?: (keyof UserGroup)[],
+  ): Promise<{
+    data: UserGroup[];
+    pagination: PaginationType;
+  }> {
+    // Tạo điều kiện where
+    const whereCondition = keyword ? { name: Like(`%${keyword}%`) } : {};
+
+    const skip = (page - 1) * limit;
+    const take = limit;
+
+    // Kiểm tra và xử lý `selectFields`
+    const selectFieldsArray = Array.isArray(selectFields)
+      ? selectFields
+      : JSON.parse((selectFields || '[]') as string);
+    const select = selectFieldsArray.length > 0 ? selectFieldsArray : undefined;
+
+    // Lấy dữ liệu user groups với phân trang
+    const [userGroups, total] = await this.userGroupRepository.findAndCount({
+      where: whereCondition,
+      skip,
+      take,
+      select,
     });
+
+    const totalPages = Math.ceil(total / limit);
+
+    return {
+      data: userGroups,
+      pagination: {
+        total,
+        page,
+        limit,
+        totalPages,
+      },
+    };
   }
 
   // Lấy nhóm người dùng theo id

@@ -8,9 +8,9 @@ import {
   Delete,
   UseGuards,
   SetMetadata,
+  Query,
 } from '@nestjs/common';
 import { ApiBearerAuth } from '@nestjs/swagger';
-import { Response } from 'express';
 
 import { JwtAuthGuard } from 'src/common/guard/jwt-auth.guard';
 import { Permissions } from 'src/decorators/permissions.decorator';
@@ -20,6 +20,7 @@ import { UserGroup } from './entities/user-group.entity';
 import { CreateUserGroupDto } from './dto/create-user-group.dto';
 import { UpdateUserGroupDto } from './dto/update-user-group.dto';
 import { PermissionsGuard } from 'src/guard/permissions.guard';
+import { PaginationType } from 'src/types/global';
 
 @Controller('user-group')
 @UseGuards(JwtAuthGuard)
@@ -41,8 +42,16 @@ export class UserGroupController {
   @UseGuards(PermissionsGuard)
   @Permissions('user_group_getList')
   @SetMetadata('customMessage', 'User groups list retrieved successfully')
-  async findAll(): Promise<UserGroup[]> {
-    return this.userGroupService.findAll();
+  async findAll(
+    @Query('page') page = 1,
+    @Query('limit') limit = 10,
+    @Query('keyword') keyword?: string,
+    @Query('selectFields') selectFields?: (keyof UserGroup)[],
+  ): Promise<{
+    data: UserGroup[];
+    pagination: PaginationType;
+  }> {
+    return this.userGroupService.findAll(page, limit, keyword, selectFields);
   }
 
   // Lấy nhóm người dùng theo id

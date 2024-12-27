@@ -23,6 +23,7 @@ export class ResponseInterceptor implements NestInterceptor {
         statusCode: context.switchToHttp().getResponse().statusCode,
         message: customMessage || 'Operation successful',
         data: data?.data || data,
+        pagination: data?.pagination || {},
       })),
     );
   }

@@ -8,6 +8,7 @@ import {
   UseGuards,
   Put,
   SetMetadata,
+  Query,
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { JwtAuthGuard } from 'src/common/guard/jwt-auth.guard';
@@ -18,6 +19,7 @@ import { UserService } from './user.service';
 import { User } from './entities/user.entity';
 import { PermissionsGuard } from 'src/guard/permissions.guard';
 import { Permissions } from 'src/decorators/permissions.decorator';
+import { PaginationType } from 'src/types/global';
 
 @ApiTags('users')
 @Controller('user')
@@ -38,8 +40,22 @@ export class UserController {
   @UseGuards(PermissionsGuard)
   @Permissions('user_getList')
   @SetMetadata('customMessage', 'User list retrieved successfully')
-  async findAll(): Promise<User[]> {
-    return this.userService.findAll();
+  async findAll(
+    @Query('page') page = 1,
+    @Query('limit') limit = 10,
+    @Query('keyword') keyword?: string,
+    @Query('status') status?: number,
+    @Query('userGroupId') userGroupId?: number,
+    @Query('selectFields') selectFields?: (keyof User)[],
+  ): Promise<{ data: User[]; pagination: PaginationType }> {
+    return this.userService.findAll(
+      page,
+      limit,
+      keyword,
+      status,
+      userGroupId,
+      selectFields,
+    );
   }
 
   @Get(':id')

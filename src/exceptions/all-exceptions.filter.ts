@@ -13,6 +13,8 @@ export class AllExceptionsFilter implements ExceptionFilter {
     const response = ctx.getResponse();
     const request = ctx.getRequest();
 
+    let stack = null;
+
     const status =
       exception instanceof HttpException
         ? exception.getStatus()
@@ -23,11 +25,21 @@ export class AllExceptionsFilter implements ExceptionFilter {
         ? exception.getResponse()
         : 'Internal server error';
 
+    if (exception instanceof HttpException) {
+      stack = (exception as any).stack;
+    } else if (exception instanceof Error) {
+      stack = exception.stack;
+    }
+
     response.status(status).json({
       statusCode: status,
       timestamp: new Date().toISOString(),
       path: request.url,
+      method: request.method,
+      message:
+        typeof message === 'string' ? message : (message as any)?.message,
       error: message,
+      stack,
     });
   }
 }
