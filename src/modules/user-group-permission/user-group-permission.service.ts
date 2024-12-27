@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { In, Repository } from 'typeorm';
 import { UserGroupPermission } from './entities/user-group-permission.entity';
 
 @Injectable()
@@ -29,31 +29,34 @@ export class UserGroupPermissionService {
       remove?: boolean;
     }[],
   ) {
-    // Lấy tất cả các bản ghi `UserGroupPermission` của `userGroupId`
+    // Lấy tất cả các bản ghi `UserGroupPermission` liên quan đến các `id`
+    const permissionIds = permissions.map((p) => p.id);
+    const userGroupPermissions =
+      await this.userGroupPermissionRepository.findBy({
+        id: In(permissionIds),
+      });
 
-    // Duyệt qua các permission và cập nhật tương ứng
+    // Tạo một map để tối ưu việc tra cứu
+    const permissionMap = new Map(
+      userGroupPermissions.map((perm) => [perm.id, perm]),
+    );
+
+    // Duyệt qua các permissions từ request và cập nhật
     for (const permissionData of permissions) {
-      const userGroupPermission =
-        await this.userGroupPermissionRepository.findOne({
-          where: { id: permissionData.id },
-        });
+      const userGroupPermission = permissionMap.get(permissionData.id);
 
       if (userGroupPermission) {
-        // Cập nhật các quyền nếu tìm thấy bản ghi
-        userGroupPermission.getList =
-          permissionData.getList ?? userGroupPermission.getList;
-        userGroupPermission.getDetail =
-          permissionData.getDetail ?? userGroupPermission.getDetail;
-        userGroupPermission.create =
-          permissionData.create ?? userGroupPermission.create;
-        userGroupPermission.update =
-          permissionData.update ?? userGroupPermission.update;
-        userGroupPermission.remove =
-          permissionData.remove ?? userGroupPermission.remove;
-
-        await this.userGroupPermissionRepository.save(userGroupPermission);
+        // Cập nhật các quyền
+        userGroupPermission.getList = permissionData.getList ?? false;
+        userGroupPermission.getDetail = permissionData.getDetail ?? false;
+        userGroupPermission.create = permissionData.create ?? false;
+        userGroupPermission.update = permissionData.update ?? false;
+        userGroupPermission.remove = permissionData.remove ?? false;
       }
     }
+    console.log('per', [...permissionMap.values()]);
+    // Lưu tất cả các thay đổi cùng lúc để giảm số lần ghi vào cơ sở dữ liệu
+    await this.userGroupPermissionRepository.save([...permissionMap.values()]);
 
     return { message: 'User group permissions updated successfully' };
   }
