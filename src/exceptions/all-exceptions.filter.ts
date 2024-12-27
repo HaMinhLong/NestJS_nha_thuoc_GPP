@@ -5,6 +5,7 @@ import {
   HttpException,
   HttpStatus,
 } from '@nestjs/common';
+import { TokenExpiredError } from '@nestjs/jwt';
 
 @Catch()
 export class AllExceptionsFilter implements ExceptionFilter {
@@ -14,6 +15,19 @@ export class AllExceptionsFilter implements ExceptionFilter {
     const request = ctx.getRequest();
 
     let stack = null;
+
+    // Kiểm tra nếu lỗi là TokenExpiredError
+    if (exception instanceof TokenExpiredError) {
+      response.status(HttpStatus.UNAUTHORIZED).json({
+        statusCode: HttpStatus.UNAUTHORIZED,
+        timestamp: new Date().toISOString(),
+        path: request.url,
+        method: request.method,
+        message: 'Token has expired',
+        error: 'Unauthorized',
+      });
+      return; // Kết thúc sớm, không xử lý tiếp
+    }
 
     const status =
       exception instanceof HttpException
