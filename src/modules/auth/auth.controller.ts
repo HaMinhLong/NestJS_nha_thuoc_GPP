@@ -39,7 +39,9 @@ export class AuthController {
 
   @UseGuards(JwtAuthGuard)
   @Get()
-  getProfile(@Req() req: any) {
-    return req.user; // Thông tin user từ token
+  async getMe(@Req() req: { id: number }) {
+    const userId = req.id;
+
+    return this.authService.getMe(userId);
   }
 }
