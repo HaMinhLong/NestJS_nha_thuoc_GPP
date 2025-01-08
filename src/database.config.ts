@@ -10,10 +10,12 @@ const env = {
   DB_USER: process.env.DB_USER,
   DB_PASSWORD: process.env.DB_PASSWORD,
   DB_NAME: process.env.DB_NAME,
+  DB_URL: process.env.DB_URL,
 };
 
 export const databaseConfig = new DataSource({
-  type: 'mysql',
+  type: 'postgres',
+  // url: env.DB_URL,
   host: env.DB_HOST || 'mysql',
   port: parseInt(env.DB_PORT || '3306'),
   username: env.DB_USER,
