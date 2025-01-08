@@ -1,24 +1,25 @@
 pipeline {
     agent any
-    
+
     environment {
-        // Cấu hình NodeJS nếu cần
+        // Đảm bảo rằng NodeJS và npm được cấu hình đúng trên Jenkins
         NODE_HOME = '/usr/local/bin'
         PATH = "${NODE_HOME}:${env.PATH}"
+        VERCEL_TOKEN = credentials('vercel-token') // Đảm bảo bạn đã cấu hình Vercel token trong Jenkins
     }
 
     stages {
         stage('Checkout') {
             steps {
                 // Checkout mã nguồn từ GitHub
-                git 'https://github.com/HaMinhLong/NestJS_nha_thuoc_GPP.git'
+                git branch: 'main', url: 'https://github.com/HaMinhLong/NestJS_nha_thuoc_GPP.git'
             }
         }
 
         stage('Install Dependencies') {
             steps {
                 script {
-                    // Cài đặt các phụ thuộc dự án
+                    // Cài đặt các phụ thuộc dự án NestJS
                     sh 'npm install'
                 }
             }
@@ -42,12 +43,14 @@ pipeline {
             }
         }
 
-        stage('Deploy') {
+        stage('Deploy to Vercel') {
             steps {
                 script {
-                    // Cấu hình triển khai (ví dụ sử dụng SCP, Docker, hoặc cài đặt môi trường)
-                    // Ví dụ sử dụng Docker:
-                    sh 'docker-compose up -d'
+                    // Cài đặt Vercel CLI (nếu chưa cài sẵn)
+                    sh 'npm install -g vercel'
+
+                    // Triển khai lên Vercel với token và dự án hiện tại
+                    sh 'vercel --prod --token $VERCEL_TOKEN'
                 }
             }
         }
@@ -55,8 +58,8 @@ pipeline {
 
     post {
         always {
-            // Thực hiện cleanup nếu cần
-            echo 'Cleaning up...'
+            // Cleanup sau khi hoàn thành (nếu cần)
+            echo 'Pipeline finished'
         }
 
         success {
