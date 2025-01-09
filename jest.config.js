@@ -7,4 +7,7 @@ module.exports = {
   },
   testMatch: ['**/?(*.)+(spec|test).ts'], // Tìm các file kiểm tra có phần mở rộng .spec.ts hoặc .test.ts
   testEnvironment: 'node', // Sử dụng môi trường Node.js
+  moduleNameMapper: {
+    '^src/(.*)$': '<rootDir>/src/$1', // Ánh xạ alias src/* sang thư mục thực tế
+  },
 };
