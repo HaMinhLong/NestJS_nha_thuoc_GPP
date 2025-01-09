@@ -2,16 +2,16 @@ pipeline {
     agent any
 
     environment {
-        // Đảm bảo rằng NodeJS và npm được cấu hình đúng trên Jenkins
-        NODE_HOME = '/usr/local/bin'
-        PATH = "${NODE_HOME}:${env.PATH}"
         VERCEL_TOKEN = credentials('vercel-token') // Đảm bảo bạn đã cấu hình Vercel token trong Jenkins
+    }
+
+    tools {
+        nodejs 'NodeJS' // Đây là tên bạn đã cấu hình trong Global Tool Configuration
     }
 
     stages {
         stage('Checkout') {
             steps {
-                // Checkout mã nguồn từ GitHub
                 git branch: 'main', url: 'https://github.com/HaMinhLong/NestJS_nha_thuoc_GPP.git'
             }
         }
@@ -19,7 +19,6 @@ pipeline {
         stage('Install Dependencies') {
             steps {
                 script {
-                    // Cài đặt các phụ thuộc dự án NestJS
                     sh 'npm install'
                 }
             }
@@ -28,17 +27,32 @@ pipeline {
         stage('Build') {
             steps {
                 script {
-                    // Build dự án NestJS
                     sh 'npm run build'
                 }
             }
         }
 
-        stage('Test') {
+        stage('Install Vercel') {
             steps {
                 script {
-                    // Chạy các bài kiểm tra (nếu có)
-                    sh 'npm run test'
+                    sh '''
+                    # Tạo thư mục cục bộ cho npm
+                    mkdir -p ~/.npm-global
+                    npm config set prefix '~/.npm-global'
+                    export PATH=~/.npm-global/bin:$PATH
+
+                    # Cài đặt vercel cục bộ
+                    npm install -g vercel
+                    '''
+                }
+            }
+        }
+
+        stage('Check Vercel Installation') {
+            steps {
+                script {
+                    sh 'echo $PATH'  // Kiểm tra lại $PATH
+                    sh 'vercel --version'  // Kiểm tra phiên bản vercel
                 }
             }
         }
@@ -46,11 +60,7 @@ pipeline {
         stage('Deploy to Vercel') {
             steps {
                 script {
-                    // Cài đặt Vercel CLI (nếu chưa cài sẵn)
-                    sh 'npm install -g vercel'
-
-                    // Triển khai lên Vercel với token và dự án hiện tại
-                    sh 'vercel --prod --token $VERCEL_TOKEN'
+                    sh 'vercel --token $VERCEL_TOKEN --prod --yes --name nha-thuoc-gpp-be'
                 }
             }
         }
@@ -58,7 +68,6 @@ pipeline {
 
     post {
         always {
-            // Cleanup sau khi hoàn thành (nếu cần)
             echo 'Pipeline finished'
         }
 

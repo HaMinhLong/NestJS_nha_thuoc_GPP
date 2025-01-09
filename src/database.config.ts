@@ -15,13 +15,12 @@ const env = {
 
 export const databaseConfig = new DataSource({
   type: 'postgres',
-  // url: env.DB_URL,
   host: env.DB_HOST || 'mysql',
   port: parseInt(env.DB_PORT || '3306'),
   username: env.DB_USER,
   password: env.DB_PASSWORD,
   database: env.DB_NAME,
-  synchronize: true,
+  synchronize: false,
   logging: true,
   entities: [join(__dirname, '**', '**', '*.entity.{ts,js}')],
   migrations: [join(__dirname, 'prisma/migrations/*.{ts,js}')],
