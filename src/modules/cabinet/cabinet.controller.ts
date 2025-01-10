@@ -8,6 +8,7 @@ import {
   UseGuards,
   SetMetadata,
   Put,
+  Query,
 } from '@nestjs/common';
 import { ApiBearerAuth } from '@nestjs/swagger';
 
@@ -18,6 +19,7 @@ import { PermissionsGuard } from 'src/guard/permissions.guard';
 import { CabinetService } from './cabinet.service';
 import { CreateCabinetDto } from './dto/create-cabinet.dto';
 import { UpdateCabinetDto } from './dto/update-cabinet.dto';
+import { Cabinet } from './entities/cabinet.entity';
 
 @Controller('cabinet')
 @UseGuards(JwtAuthGuard)
@@ -37,8 +39,13 @@ export class CabinetController {
   @UseGuards(PermissionsGuard)
   @Permissions('cabinet_getList')
   @SetMetadata('customMessage', 'Cabinet list retrieved successfully')
-  findAll() {
-    return this.cabinetService.findAll();
+  async findAll(
+    @Query('page') page = 1,
+    @Query('limit') limit = 10,
+    @Query('keyword') keyword?: string,
+    @Query('selectFields') selectFields?: (keyof Cabinet)[],
+  ) {
+    return this.cabinetService.findAll(page, limit, keyword, selectFields);
   }
 
   @Get(':id')
