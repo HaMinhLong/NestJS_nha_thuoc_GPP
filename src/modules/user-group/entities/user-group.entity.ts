@@ -1,12 +1,5 @@
 // src/entities/user-group.entity.ts
-import {
-  Entity,
-  PrimaryGeneratedColumn,
-  Column,
-  OneToMany,
-  ManyToMany,
-  JoinTable,
-} from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from 'typeorm';
 import { User } from 'src/modules/user/entities/user.entity'; // Import User entity
 import { UserGroupPermission } from 'src/modules/user-group-permission/entities/user-group-permission.entity';
 

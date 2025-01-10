@@ -14,7 +14,7 @@ const env = {
 };
 
 export const databaseConfig = new DataSource({
-  type: 'postgres',
+  type: 'mysql',
   host: env.DB_HOST || 'mysql',
   port: parseInt(env.DB_PORT || '3306'),
   username: env.DB_USER,

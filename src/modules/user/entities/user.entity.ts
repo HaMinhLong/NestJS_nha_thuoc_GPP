@@ -2,19 +2,18 @@ import {
   Entity,
   Column,
   PrimaryGeneratedColumn,
-  CreateDateColumn,
-  UpdateDateColumn,
   JoinColumn,
   ManyToOne,
   Index,
 } from 'typeorm';
 import { UserGroup } from './../../user-group/entities/user-group.entity';
+import { BaseEntity } from 'src/common/base.entity';
 
 @Entity()
 @Index('idx_user_username', ['username'], { unique: true })
 @Index('idx_user_email', ['email'], { unique: true })
 @Index('idx_user_group_id', ['userGroupId'])
-export class User {
+export class User extends BaseEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
@@ -35,12 +34,6 @@ export class User {
 
   @Column({ type: 'int', default: 1 })
   status: number;
-
-  @CreateDateColumn({ type: 'timestamp' })
-  createdAt: Date;
-
-  @UpdateDateColumn({ type: 'timestamp' })
-  updatedAt: Date;
 
   @Column({ nullable: false })
   userGroupId: number;

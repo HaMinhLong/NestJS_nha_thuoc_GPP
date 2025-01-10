@@ -6,7 +6,6 @@ import {
 } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { JwtService } from '@nestjs/jwt';
-import { Observable } from 'rxjs';
 import { UserGroupPermissionService } from 'src/modules/user-group-permission/user-group-permission.service';
 import { transformPermissions } from 'src/utils/utils';
 
