@@ -2,9 +2,10 @@
 import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from 'typeorm';
 import { User } from 'src/modules/user/entities/user.entity'; // Import User entity
 import { UserGroupPermission } from 'src/modules/user-group-permission/entities/user-group-permission.entity';
+import { BaseEntity } from 'src/common/base.entity';
 
 @Entity()
-export class UserGroup {
+export class UserGroup extends BaseEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
