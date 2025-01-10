@@ -12,6 +12,7 @@ import { UserModule } from './modules/user/user.module';
 import { UserGroupModule } from './modules/user-group/user-group.module';
 import { PermissionModule } from './modules/permission/permission.module';
 import { UserGroupPermissionModule } from './modules/user-group-permission/user-group-permission.module';
+import { CabinetModule } from './modules/cabinet/cabinet.module';
 
 @Module({
   imports: [
@@ -33,6 +34,7 @@ import { UserGroupPermissionModule } from './modules/user-group-permission/user-
     AuthModule,
     PermissionModule,
     UserGroupPermissionModule,
+    CabinetModule,
   ],
   providers: [
     {

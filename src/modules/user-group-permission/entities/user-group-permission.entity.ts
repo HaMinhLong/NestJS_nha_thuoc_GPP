@@ -1,19 +1,11 @@
-import {
-  Entity,
-  PrimaryGeneratedColumn,
-  ManyToOne,
-  Column,
-  JoinColumn,
-} from 'typeorm';
+import { Entity, ManyToOne, Column, JoinColumn } from 'typeorm';
 
 import { Permission } from 'src/modules/permission/entities/permission.entity';
 import { UserGroup } from 'src/modules/user-group/entities/user-group.entity';
+import { BaseEntity } from 'src/common/base.entity';
 
 @Entity()
-export class UserGroupPermission {
-  @PrimaryGeneratedColumn()
-  id: number;
-
+export class UserGroupPermission extends BaseEntity {
   @ManyToOne(() => UserGroup, (userGroup) => userGroup.userGroupPermissions)
   @JoinColumn({ name: 'userGroupId' })
   userGroup: UserGroup;
