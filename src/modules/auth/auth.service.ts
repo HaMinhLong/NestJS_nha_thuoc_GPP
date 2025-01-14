@@ -81,12 +81,24 @@ export class AuthService {
     return this.userRepository.save(newUser);
   }
 
-  async getMe(userId: number): Promise<User> {
+  async getMe(userId: number): Promise<{ user: User; permission: string[] }> {
     const user = await this.userRepository.findOne({ where: { id: userId } });
     if (!user) {
       throw new NotFoundException('User not found');
     }
 
-    return user;
+    const permissions = await this.userGroupPermissionRepository.find({
+      where: { userGroup: { id: user?.userGroupId } },
+      relations: ['permission'],
+      select: {
+        permission: {
+          id: false,
+          name: true,
+        },
+      }, // Liên kết với bảng Permission
+    });
+    const permissionsResult = transformPermissions(permissions);
+
+    return { user, permission: permissionsResult };
   }
 }
