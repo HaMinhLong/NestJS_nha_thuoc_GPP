@@ -43,9 +43,18 @@ export class ProductTypeController {
     @Query('page') page = 1,
     @Query('limit') limit = 10,
     @Query('keyword') keyword?: string,
+    @Query('status') status?: number,
+    @Query('isMedicine') isMedicine?: number,
     @Query('selectFields') selectFields?: (keyof ProductType)[],
   ) {
-    return this.productTypeService.findAll(page, limit, keyword, selectFields);
+    return this.productTypeService.findAll(
+      page,
+      limit,
+      keyword,
+      status,
+      isMedicine,
+      selectFields,
+    );
   }
 
   @Get(':id')

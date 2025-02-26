@@ -21,6 +21,8 @@ export class ProductTypeService {
     page = 1,
     limit = 10,
     keyword?: string,
+    status?: number,
+    isMedicine?: number,
     selectFields?: (keyof ProductType)[],
   ) {
     // Tạo điều kiện where
@@ -28,6 +30,14 @@ export class ProductTypeService {
 
     if (keyword) {
       whereCondition.push({ name: Like(`%${keyword}%`) });
+    }
+
+    if (status) {
+      whereCondition.push({ status });
+    }
+
+    if (isMedicine) {
+      whereCondition.push({ isMedicine });
     }
 
     const skip = (page - 1) * limit;
